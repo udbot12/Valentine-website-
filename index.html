@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Will you be my Valentine?</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(#ffe6f0,#ffd1e8);
+  font-family:system-ui;
+  overflow:hidden;
+}
+.card{
+  background:#ffffffcc;
+  padding:24px;
+  border-radius:22px;
+  text-align:center;
+  width:min(90vw,420px);
+  box-shadow:0 20px 50px rgba(0,0,0,.15);
+}
+h1{font-size:28px;}
+#message{
+  margin:10px 0;
+  font-size:14px;
+  opacity:.75;
+}
+.zone{
+  position:relative;
+  height:140px;
+}
+button{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  padding:14px 22px;
+  border-radius:999px;
+  font-size:17px;
+  font-weight:700;
+  border:none;
+  cursor:pointer;
+}
+#yes{
+  left:15%;
+  background:#ff3b7a;
+  color:#fff;
+}
+#no{
+  left:60%;
+  background:#e5e7eb;
+}
+#result{display:none;}
+</style>
+</head>
+
+<body>
+<canvas id="confetti"></canvas>
+
+<div class="card">
+<h1>Saptadeep, will you be my Valentine? 💌</h1>
+<div id="message">Think carefully 😌</div>
+
+<div class="zone" id="zone">
+  <button id="yes">YES 💖</button>
+  <button id="no">NO 🙄</button>
+</div>
+
+<div id="result">
+  <h2>YAYYY!! 🎉💘</h2>
+  <p>Best decision ever 😭✨</p>
+</div>
+</div>
+
+<script>
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const msg=document.getElementById("message");
+const zone=document.getElementById("zone");
+const res=document.getElementById("result");
+
+const messages=[
+ "Are you sure? 🥺",
+ "Itna bhi bura nahi hoon 😭",
+ "Dil tod diya 💔",
+ "Okay last chance 😳",
+ "Ab toh YES hi bacha hai 😈"
+];
+let count=0,scale=1;
+
+const confettiCanvas=document.getElementById("confetti");
+confettiCanvas.width=innerWidth;
+confettiCanvas.height=innerHeight;
+const confettiRun=confetti.create(confettiCanvas,{resize:true});
+
+zone.addEventListener("pointermove",e=>{
+ const b=no.getBoundingClientRect();
+ const d=Math.hypot(
+   e.clientX-(b.left+b.width/2),
+   e.clientY-(b.top+b.height/2)
+ );
+ if(d<120){
+   const z=zone.getBoundingClientRect();
+   no.style.left=Math.random()*(z.width-80)+"px";
+   no.style.top=Math.random()*(z.height-40)+"px";
+
+   msg.textContent=messages[Math.min(count,messages.length-1)];
+   count++;
+
+   scale=Math.min(scale+0.12,2.3);
+   yes.style.transform=`translateY(-50%) scale(${scale})`;
+ }
+});
+
+yes.onclick=()=>{
+ zone.style.display="none";
+ msg.style.display="none";
+ res.style.display="block";
+ confettiRun({particleCount:300,spread:160,origin:{x:.5,y:.5}});
+};
+</script>
+</body>
+</html>
